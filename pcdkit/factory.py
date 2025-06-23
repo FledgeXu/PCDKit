@@ -14,14 +14,14 @@ from .typings import PathLike
 
 def merge(
     clouds: List["PointCloud"],
-    memmap_file_path: Optional[Path] = None,
+    memmap_file_path: Optional[PathLike] = None,
 ) -> "PointCloud":
     """
     Merge multiple PointCloud instances into a single PointCloud.
 
     Args:
         clouds (List[PointCloud]): A list of PointCloud instances to merge.
-        memmap_file_path (Optional[Path]): Optional path to store the merged point cloud as a memory-mapped file.
+        memmap_file_path (Optional[PathLike]): Optional path to store the merged point cloud as a memory-mapped file.
 
     Returns:
         PointCloud: A new PointCloud instance containing the merged data.
