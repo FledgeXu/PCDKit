@@ -4,12 +4,12 @@ from typing import List, Optional
 
 import numpy as np
 
-from src.in_memory import InMemoryPointCloud
-from src.memmap import MemMapPointCloud
-from src.pcd_loader import PCDLoader
-from src.pcd_metadata import PCDMetadata
-from src.point_cloud import PointCloud
-from src.typings import PathLike
+from .in_memory import InMemoryPointCloud
+from .memmap import MemMapPointCloud
+from .pcd_loader import PCDLoader
+from .pcd_metadata import PCDMetadata
+from .point_cloud import PointCloud
+from .typings import PathLike
 
 
 def merge(

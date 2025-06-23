@@ -4,10 +4,10 @@ from typing import Union
 import numpy as np
 from typing_extensions import Self
 
-from src.pcd_metadata import PCDMetadata
-from src.point_cloud import PointCloud
-from src.typings import PathLike
-from src.utils import insert_field, remove_field
+from .pcd_metadata import PCDMetadata
+from .point_cloud import PointCloud
+from .typings import PathLike
+from .utils import insert_field, remove_field
 
 
 class MemMapPointCloud(PointCloud):

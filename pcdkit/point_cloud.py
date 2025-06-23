@@ -2,11 +2,11 @@ import os
 import struct
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import BinaryIO, Literal, Union
+from typing import BinaryIO, Union
 
 import lzf
 import numpy as np
-from typing_extensions import Self
+from typing_extensions import Self,Literal
 
 from .pcd_metadata import PCDMetadata
 from .typings import PathLike, PCDUnsupportedFormatError
