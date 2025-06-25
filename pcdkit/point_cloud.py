@@ -6,7 +6,7 @@ from typing import BinaryIO, Union
 
 import lzf
 import numpy as np
-from typing_extensions import Self,Literal
+from typing_extensions import Literal, Self
 
 from .pcd_metadata import PCDMetadata
 from .typings import PathLike, PCDUnsupportedFormatError
@@ -190,3 +190,15 @@ class PointCloud(ABC):
             raise TypeError(f"Unsupported value type: {type(value)}")
 
         return self
+
+    def drop_points(self, indices: np.ndarray) -> Self:
+        """
+        Drop points at specified indices from the point cloud.
+
+        Args:
+            indices (np.ndarray): An array of indices to remove.
+
+        Returns:
+            Self: The updated point cloud instance.
+        """
+        pass

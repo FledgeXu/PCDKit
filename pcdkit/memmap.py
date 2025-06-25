@@ -136,3 +136,27 @@ class MemMapPointCloud(PointCloud):
         super().set_field(name, value)
         self.pc_data.flush()
         return self
+
+    def drop_points(self, indices: np.ndarray) -> Self:
+        if not np.issubdtype(indices.dtype, np.integer):
+            raise TypeError("Indices must be an integer array.")
+
+        total_points = self.pc_data.shape[0]
+        mask = np.ones(total_points, dtype=bool)
+        mask[indices] = False
+
+        new_array = self.pc_data[mask].copy()
+        new_array.tofile(self.memmap_file_path)
+
+        self.metadata.points = new_array.shape[0]
+        self.metadata.width = new_array.shape[0]
+        self.metadata.height = 1
+
+        self.pc_data = np.memmap(
+            self.memmap_file_path,
+            dtype=self.metadata.to_dtype(),
+            mode="r+",
+            shape=(self.metadata.points,),
+        )
+
+        return self

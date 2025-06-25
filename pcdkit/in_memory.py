@@ -68,3 +68,29 @@ class InMemoryPointCloud(PointCloud):
         self.pc_data = remove_field(self.pc_data, name)
         self.metadata.remove_field(name)
         return self
+
+    def drop_points(self, indices: np.ndarray) -> Self:
+        """
+        Drop points by indices and convert to unorganized (height=1) point cloud.
+
+        Args:
+            indices (np.ndarray): Indices to remove.
+
+        Returns:
+            Self: Updated point cloud with selected points removed.
+        """
+        if not np.issubdtype(indices.dtype, np.integer):
+            raise TypeError("Indices must be an integer array.")
+
+        total_points = self.pc_data.shape[0]
+        mask = np.ones(total_points, dtype=bool)
+        mask[indices] = False
+
+        new_pc_data = self.pc_data[mask]
+
+        self.pc_data = new_pc_data
+        self.metadata.points = new_pc_data.shape[0]
+        self.metadata.width = new_pc_data.shape[0]
+        self.metadata.height = 1
+
+        return self

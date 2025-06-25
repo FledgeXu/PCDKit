@@ -2,7 +2,7 @@ from pathlib import Path
 
 import numpy as np
 
-from src import (
+from pcdkit import (
     MemMapPointCloud,
     PointCloud,
     from_array,
@@ -50,6 +50,15 @@ def test_inmemory_add_drop_set_transform(tmp_path):
     cloud.save(save_path, format="binary")
     assert save_path.exists()
 
+    # test drop_points
+    cloud = from_array(make_structured_xyz(5))
+    cloud.drop_points(np.array([0, 2]))
+    assert cloud.pc_data.shape[0] == 3
+    assert cloud.metadata.points == 3
+    assert cloud.metadata.height == 1
+    assert cloud.metadata.width == 3
+    np.testing.assert_array_equal(cloud.pc_data["x"], np.array([1, 3, 4], dtype="f4"))
+
 
 def test_memmap_add_drop_set(tmp_path):
     arr = make_structured_xyz(5)
@@ -75,6 +84,15 @@ def test_memmap_add_drop_set(tmp_path):
     save_path = tmp_path / "out.pcd"
     cloud.save(save_path, format="binary_compressed")
     assert save_path.exists()
+
+    # test drop_points
+    cloud = from_array(make_structured_xyz(5), memmap_file_path=mmap_path)
+    cloud.drop_points(np.array([1, 3]))
+    assert cloud.pc_data.shape[0] == 3
+    assert cloud.metadata.points == 3
+    assert cloud.metadata.height == 1
+    assert cloud.metadata.width == 3
+    np.testing.assert_array_equal(cloud.pc_data["y"], np.array([0, 4, 8], dtype="f4"))
 
 
 def create_test_cloud(values: list[tuple[float, float, float]]) -> PointCloud:
