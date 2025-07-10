@@ -99,7 +99,7 @@ def parse_pcd_header_from_lines(lines: List[str]) -> Tuple[PCDMetadata, str]:
     if metadata["points"] != metadata["width"] * metadata["height"]:
         raise PCDDataMismatchError("POINTS must equal WIDTH × HEIGHT.")
 
-    if metadata["data"] not in {"ascii", "binary", "binary_compressed"}:
+    if pcd_format not in {"ascii", "binary", "binary_compressed"}:
         raise PCDUnsupportedFormatError(
             f"Unsupported DATA pcd_format: {metadata['data']}"
         )
