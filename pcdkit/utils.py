@@ -182,7 +182,7 @@ def remove_field(array: np.ndarray, name: str) -> np.ndarray:
     return new_array
 
 
-@numba.njit()
+@numba.njit(cache=True)
 def apply_transform_xyz(xyz: np.ndarray, r: np.ndarray, t: np.ndarray):
     for i in range(xyz.shape[0]):
         xi, yi, zi = xyz[i, 0], xyz[i, 1], xyz[i, 2]
@@ -191,7 +191,7 @@ def apply_transform_xyz(xyz: np.ndarray, r: np.ndarray, t: np.ndarray):
         xyz[i, 2] = r[2, 0] * xi + r[2, 1] * yi + r[2, 2] * zi + t[2]
 
 
-@numba.njit(parallel=True)
+@numba.njit(cache=True, parallel=True)
 def apply_transform_xyz_parallel(xyz: np.ndarray, r: np.ndarray, t: np.ndarray):
     for i in numba.prange(xyz.shape[0]):
         xi, yi, zi = xyz[i, 0], xyz[i, 1], xyz[i, 2]
