@@ -91,7 +91,8 @@ class PCDMetadata:
 
     def to_pcd_header(self, data_format: str) -> str:
         lines = [
-            "# .PCD v.7 - Point Cloud Data file format",
+            # I mean, it's kinda shit the official example is "v.7", but people are using "v0.7", so we have to follow this convention.
+            f"# .PCD v{self.version} - Point Cloud Data file format",
             f"VERSION {self.version}",
             f"FIELDS {' '.join(self.fields)}",
             f"SIZE {' '.join(map(str, self.size))}",
