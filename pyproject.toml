@@ -1,6 +1,6 @@
 [project]
 name = "pcdkit"
-version = "0.2.9"
+version = "0.2.10"
 description = "A lightweight PCD file processing library"
 readme = "README.md"
 authors = [{ name = "Fledge Shiu", email = "xzk0701@gmail.com" }]
