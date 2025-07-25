@@ -53,7 +53,7 @@ class PCDMetadata:
                 raise PCDParseError(f"Unsupported dtype kind: {kind}")
 
         return cls(
-            version=".7",
+            version="0.7",
             fields=fields,
             size=[array.dtype.fields[name][0].itemsize for name in fields],
             type=field_types,
