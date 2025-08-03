@@ -144,7 +144,59 @@ def parse_binary_compressed_data(file: BinaryIO, metadata: PCDMetadata) -> np.nd
             f"Decompressed data length mismatch: expected {expected_bytes}, got {len(decompressed)}"
         )
 
-    return np.frombuffer(decompressed, dtype=dtype)
+    return reconstruct_structured_array_from_columnwise_bytes(decompressed, dtype)
+
+
+def reconstruct_structured_array_from_columnwise_bytes(
+    data: Union[bytes, memoryview],
+    dtype: np.dtype,
+) -> np.ndarray:
+    """
+    Reconstruct a structured NumPy array from column-wise byte data.
+
+    Assumes the data contains all field values stored sequentially,
+    field by field, for a structured dtype. Automatically infers the number
+    of records based on total byte length.
+
+    Parameters:
+        data (bytes or memoryview): Field-wise byte layout for all records.
+        dtype (np.dtype): Target structured dtype.
+
+    Returns:
+        np.ndarray: Structured array with shape (num_records,).
+
+    Raises:
+        ValueError: If dtype is not structured or data size is invalid.
+    """
+    if dtype.fields is None:
+        raise ValueError("Provided dtype is not structured.")
+
+    total_bytes = len(data)
+    field_names = dtype.names
+    field_dtypes = [dtype.fields[name][0] for name in field_names]
+    field_itemsizes = [np.dtype(ft).itemsize for ft in field_dtypes]
+    total_per_point = sum(field_itemsizes)
+
+    if total_bytes % total_per_point != 0:
+        raise ValueError("Byte size mismatch with dtype layout.")
+
+    num_points = total_bytes // total_per_point
+
+    offset = 0
+    values = []
+    for name, field_dtype, itemsize in zip(field_names, field_dtypes, field_itemsizes):
+        nbytes = itemsize * num_points
+        field_data = np.frombuffer(
+            data, dtype=field_dtype, count=num_points, offset=offset
+        )
+        values.append((name, field_data))
+        offset += nbytes
+
+    structured = np.empty(num_points, dtype=dtype)
+    for name, val in values:
+        structured[name] = val
+
+    return structured
 
 
 def insert_field(
