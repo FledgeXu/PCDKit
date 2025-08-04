@@ -40,6 +40,7 @@ def merge(
     merged_data = np.concatenate([c.pc_data for c in clouds])
     merged_metadata = copy.deepcopy(clouds[0].metadata)
     merged_metadata.points = len(merged_data)
+    merged_metadata.width = merged_metadata.points // merged_metadata.height
 
     return _create(merged_metadata, merged_data, memmap_file_path)
 
