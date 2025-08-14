@@ -41,14 +41,23 @@ class PCDMetadata:
             item_size = dtype.itemsize
 
             if kind == "f":
-                if item_size == 4:
-                    field_types.append("F")
-                elif item_size == 8:
-                    field_types.append("F")  # Or maybe "D" depending on PCD version
-                else:
-                    raise PCDParseError(f"Unsupported float size: {item_size}")
-            elif kind in {"u", "i"}:
-                field_types.append("I")  # Integer
+                if item_size not in {4, 8}:
+                    raise PCDParseError(
+                        f"Unsupported float size of {kind}: {item_size}"
+                    )
+                field_types.append("F")
+            elif kind == "u":
+                if item_size not in {1, 2, 4}:
+                    raise PCDParseError(
+                        f"Unsupported float size of {kind}: {item_size}"
+                    )
+                field_types.append("U")
+            elif kind == "i":
+                if item_size not in {1, 2, 4}:
+                    raise PCDParseError(
+                        f"Unsupported float size of {kind}: {item_size}"
+                    )
+                field_types.append("I")
             else:
                 raise PCDParseError(f"Unsupported dtype kind: {kind}")
 
